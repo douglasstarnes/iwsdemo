@@ -1,0 +1,16 @@
+from app import app
+from flask import render_template, request
+from app.models import Client
+
+@app.route('/new_ticket', methods=['GET', 'POST'])
+def new_ticket():
+    if request.method == 'GET':
+        clients = Client.query.all()
+        return render_template('new_ticket.html', clients=clients)
+    else:
+        date = request.form['selected']
+        return date
+
+@app.route('/')
+def index():
+    return 'hello flask'

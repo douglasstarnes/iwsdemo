@@ -1,6 +1,6 @@
 from app import app, db, script_manager
 from flask.ext.script import Command, Option
-from app.models import Client, TicketUser
+from app.models import Client, TicketUser, ProductArea
 import getpass
 
 class ResetDatabaseCommand(Command):
@@ -19,8 +19,12 @@ class PopulateDatabaseCommand(Command):
         for client in clients:
             c = Client(name=client)
             db.session.add(c)
+        products = ['Billing', 'Claims', 'Policies', 'Reports']
+        for product in products:
+            p = ProductArea(name=product)
+            db.session.add(p)
         db.session.commit()
-        print('clients added')
+        print('clients and products added')
 
 class CreateUserCommand(Command):
     def run(self):
@@ -39,7 +43,7 @@ class CreateUserCommand(Command):
                 print('username already exists')
         else:
             print('passwords did not match')
-            
+
 script_manager.add_command('reset_database', ResetDatabaseCommand())
 script_manager.add_command('populate_database', PopulateDatabaseCommand())
 script_manager.add_command('create_user', CreateUserCommand())

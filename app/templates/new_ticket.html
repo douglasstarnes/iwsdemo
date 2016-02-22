@@ -2,6 +2,28 @@
 
 {% block content %}
 <div ng-controller="NewTicketController">
-    <uib-datepicker></uib-datepicker>
+    <form action="/new_ticket" method="post">
+        Title: <input type="text" name="title"/><br/>
+        Description:<br/>
+        <textarea rows="5" cols="60" name="description"></textarea><br/>
+        Place at top of queue? <input type="checkbox" name="top_queue"/><br/>
+        Target Date:<br/>
+        <uib-datepicker ng-model="dt"></uib-datepicker><br/>
+        <input type="text" name="target_date_input"  ng-model="dt"/>
+        <input type="hidden" name="target_date" ng-model="dt"/>
+        Client:
+        <select name="client">
+            {% for client in clients %}
+                <option value="{{ client.id }}">{{ client.name }}</option>
+            {% endfor %}
+        </select><br/>
+        Product Area:
+        <select name="product_area">
+        {% for product in products %}
+            <option value="{{ product.id }}">{{ product.name }}</option>
+        {% endfor %}
+        </select><br/>
+        <input type="submit" value="Submit"/>
+    </form>
 </div>
 {% endblock %}
