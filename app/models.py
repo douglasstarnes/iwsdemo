@@ -32,4 +32,12 @@ class Ticket(db.Model):
     product_area_id = db.Column(db.Integer, db.ForeignKey('product_area.id'))
     product_area = db.relationship(ProductArea, backref=db.backref('tickets'))
 
+    def decrease_priority(self):
+        self.priority += 1
+        db.session.add(self)
+        db.session.commit()
 
+    def increase_priority(self):
+        self.priority -= 1
+        db.session.add(self)
+        db.session.commit()
