@@ -11,6 +11,14 @@ class ProductArea(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(128))
 
+
+class TicketUser(db.Model):
+    __tablename__ = 'ticket_user'
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(32))
+    password = db.Column(db.String(32))
+
+
 class Ticket(db.Model):
     __tablename__ = 'ticket'
     id = db.Column(db.Integer, primary_key=True)
