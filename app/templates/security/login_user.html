@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title></title>
+  </head>
+  <body>
+    <form class="" action="{{ url_for_security('login') }}" method="post">
+      {{ login_user_form.hidden_tag() }}
+      Email: <input type="text" name="email"/><br/>
+      Password: <input type="password" name="password"/><br/>
+      Remember Me: <input type="checkbox" name="remember"/><br/>
+      <input type="submit" name="submit"/>
+      <input type="hidden" name="next"/>
+    </form>
+  </body>
+</html>

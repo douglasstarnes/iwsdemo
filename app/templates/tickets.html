@@ -1,7 +1,29 @@
 {% extends "base.html" %}
 
 {% block content %}
-<div ng-controller="ViewTicketController">
-  
+<div ng-controller="ViewTicketController" class="container">
+  <div class="form-group">
+    <label for="clients">Select a client</label>
+    <select class="form-control" name="clients" ng-model="client_id" ng-change="get_tickets()">
+      <option value="">-- Select a client --</option>
+      {% for client in clients %}
+        <option value="{{ client.id }}">{{ client.name }}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="row" ng-repeat="ticket in tickets">
+    <div class="col-md-3">
+      {% raw %}{{ ticket.title }}{% endraw %}
+    </div>
+    <div class="col-md-3">
+      {% raw %}{{ ticket.target }}{% endraw %}
+    </div>
+    <div class="col-md-3">
+      {% raw %}{{ ticket.product_area }}{% endraw %}
+    </div>
+    <div class="col-md-3">
+      {% raw %}{{ ticket.description }}{% endraw %}
+    </div>
+  </div>
 </div>
 {% endblock %}

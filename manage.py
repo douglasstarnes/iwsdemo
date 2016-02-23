@@ -2,6 +2,8 @@ from app import app, db, script_manager
 from flask.ext.script import Command, Option
 from app.models import Client, TicketUser, ProductArea
 import getpass
+from sqlalchemy.exc import IntegrityError
+from app.security import user_datastore
 
 class ResetDatabaseCommand(Command):
     def run(self):
@@ -23,6 +25,9 @@ class PopulateDatabaseCommand(Command):
         for product in products:
             p = ProductArea(name=product)
             db.session.add(p)
+        admin = user_datastore.create_user(username='admin', password='adminpw', email='admin@example.com')
+        admin_role = user_datastore.create_role(name='admin')
+        user_datastore.add_role_to_user(admin, admin_role)
         db.session.commit()
         print('clients and products added')
 
@@ -30,19 +35,17 @@ class CreateUserCommand(Command):
     def run(self):
         username = input('Username: ')
         password1 = getpass.getpass('Password: ')
-        password2 = getpass.getpass('Confirm password: ')
+        confim = getpass.getpass('Confirm password: ')
 
-        if password1 == password2:
-            user = TicketUser.query.filter_by(username=username).first()
-            if user is None:
-                ticket_user = TicketUser(username=username, password=password1)
-                db.session.add(ticket_user)
+        if password == confirm:
+            try:
+                user_datastore.create_user(username=username, password=password)
                 db.session.commit()
-                print('added new user')
-            else:
-                print('username already exists')
+                print('user created')
+            except IntegrityError:
+                print('Username already in use')
         else:
-            print('passwords did not match')
+            print('Passwords did not match')
 
 script_manager.add_command('reset_database', ResetDatabaseCommand())
 script_manager.add_command('populate_database', PopulateDatabaseCommand())
