@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container" ng-controller="CreateUserController">
+  <form action="/create_user" method="post">
+    <div class="form-group">
+      <label>Username</label>
+      <input type="text" class="form-control" name="username"/>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="text" class="form-control" name="email"/>
+    </div>
+    <div class="form-group">
+      <label>Generate Password</label>
+      <input type="checkbox" class="form-control" name="generate_password" ng-model="generate"/>
+    </div>
+    <div class="form-group">
+      <label>Password</label>
+      <input type="password" class="form-control" name="password" id="password" ng-disabled="generate"/>
+    </div>
+    <div class="form-group">
+      <label>Confirm Password</label>
+      <input type="password" class="form-control" name="confirm" id="confirm" ng-disabled="generate"/>
+    </div>
+    <div class="form-group">
+      <input type="submit" class="form-control" value="Submit"/>
+    </div>
+  </form>
+  {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+      <div class="row">
+        <div class="col-md-12">
+          <div class="alert alert-info">{{ message }}</div>
+        </div>
+      </div>
+    {% endfor %}
+  {% endwith %}
+</div>
+{% endblock %}

@@ -11,4 +11,7 @@ angular.module('ticketApp', ['ngAnimate', 'ui.bootstrap'])
             $scope.tickets = sorted;
           })
       };
+    })
+    .controller('CreateUserController', function($scope) {
+      
     });

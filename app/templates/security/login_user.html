@@ -1,17 +1,25 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <title></title>
-  </head>
-  <body>
-    <form class="" action="{{ url_for_security('login') }}" method="post">
-      {{ login_user_form.hidden_tag() }}
-      Email: <input type="text" name="email"/><br/>
-      Password: <input type="password" name="password"/><br/>
-      Remember Me: <input type="checkbox" name="remember"/><br/>
-      <input type="submit" name="submit"/>
-      <input type="hidden" name="next"/>
-    </form>
-  </body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <form class="" action="{{ url_for_security('login') }}" method="post">
+    {{ login_user_form.hidden_tag() }}
+    <div class="form-group">
+      <label for="">Email</label>
+      <input class="form-control" type="text" name="email"/>
+    </div>
+    <div class="form-group">
+      <label for="">Password</label>
+      <input class="form-control" type="password" name="password"/>
+    </div>
+    <div class="form-group">
+      <label for=""><label for="">Remember Me</label>
+      <input class="form-control" type="checkbox" name="remember"/>
+    </div>
+    <div class="form-group">
+      <input class="form-control" type="submit" name="submit"/>
+    </div>
+    <input type="hidden" name="next"/>
+  </form>
+</div>
+{% endblock %}

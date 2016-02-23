@@ -1,15 +1,21 @@
 from app import app, db, api
-from flask import render_template, request
+from flask import render_template, request, flash, redirect, url_for
 from app.models import Client, ProductArea, Ticket, TicketUser
 import datetime, time, re
 from flask_restful import Resource
 from flask.ext.security import login_required, roles_required
+import string
+import random
 
 def parse_date(date_string):
     pattern = '\w{3}\s\w{3}\s\d{2}\s\d{4}'
     match = re.search(pattern, date_string)
     ts = time.strptime(match.group(0), '%a %b %d %Y')
     return datetime.datetime.fromtimestamp(time.mktime(ts))
+
+def gen_password(l):
+    haystack = string.ascii_letters + string.digits + '!@#$%^&*()'
+    return ''.join([random.choice(haystack) for _ in range(l)])
 
 @app.route('/new_ticket', methods=['GET', 'POST'])
 def new_ticket():
@@ -23,7 +29,7 @@ def new_ticket():
         description = request.form['description']
         top_queue = False
         if request.form.get('top_queue'):
-            top_queue = True if request.form['top_queue'] else False
+            top_queue = True if request.form['top_queue'].lower() == 'on' else False
         target_date = request.form['target_date']
         client_id = request.form['client']
         product_area_id = request.form['product_area']
@@ -51,6 +57,39 @@ def new_ticket():
         db.session.commit()
 
         return target_date
+
+@app.route('/create_user', methods=['GET', 'POST'])
+@roles_required('admin')
+@login_required
+def create_user():
+    if request.method == 'GET':
+        return render_template('create_user.html')
+    else:
+        username = request.form['username']
+        email = request.form['email']
+        generate_password = False
+        if request.form.get('generate_password'):
+            generate_password = True if request.form['generate_password'].lower() == 'on' else False
+        if generate_password:
+            password = confirm = gen_password(12)
+        else:
+            password = request.form['password']
+            confirm = request.form['confirm']
+        if len(password) < app.config['MIN_PASSWORD_LENGTH'] or len(confirm) < app.config['MIN_PASSWORD_LENGTH']:
+            flash('Password must be at least {} characters'.format(app.config['MIN_PASSWORD_LENGTH']))
+            return redirect(url_for('create_user'))
+        if not password == confirm:
+            flash('Passwords did not match each other, please try again')
+            return redirect(url_for('create_user'))
+        ticket_user = TickerUser.query.filter_by(email=email).first()
+        if ticket_user is None:
+            ticket_user = TicketUser(
+
+            )
+        else:
+            flash('Email is already in use')
+            return redirect(url_for('create_user'))
+
 
 @app.route('/tickets')
 def tickets():
