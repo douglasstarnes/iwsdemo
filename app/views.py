@@ -52,12 +52,19 @@ def new_ticket():
             target=parse_date(target_date),
             ticket_url=ticket_url,
             client = client,
-            product_area=product_area
+            product_area=product_area,
+            assigned_to = user
         )
         db.session.add(ticket)
         db.session.commit()
 
-        return target_date
+        return redirect(url_for('tickets'))
+
+@app.route('/my_tickets')
+@login_required
+def my_tickets():
+    tickets = Ticket.query.filter_by(assigned_to=current_user)
+    return render_template('my_tickets.html', tickets=tickets)
 
 @app.route('/create_user', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -137,14 +144,11 @@ def manage_roles(user_id):
             return render_template('manage_roles.html', active_roles=active_roles, inactive_roles=inactive_roles, user=user)
         else:
             for role in all_roles:
-                print('checking role: {}'.format(role))
                 if request.form.get('role_' + role):
                     if not user.has_role(role):
-                        print('adding role')
                         user_datastore.add_role_to_user(user, role)
                 else:
                     if user.has_role(role):
-                        print('removing role')
                         user_datastore.remove_role_from_user(user, role)
             db.session.commit()
             return redirect(url_for('user_details', user_id=user_id))
@@ -181,7 +185,8 @@ class TicketsApi(Resource):
                 'target': ticket.target.strftime('%b. %d, %Y'),
                 'ticket_url': ticket.ticket_url,
                 'product_area': ticket.product_area.name,
-                'priority': ticket.priority
+                'priority': ticket.priority,
+                'assigned_to': ticket.assigned_to.username
             }
             for ticket in tickets
         ]
