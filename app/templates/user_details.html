@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-2">Username</div>
+    <div class="col-md-10">{{ user.username }}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">Email</div>
+    <div class="col-md-10">{{ user.email }}</div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">Roles</div>
+    <div class="col-md-10">
+      {% for role in user.roles %}
+        <div class="row">
+          <div class="col-md-10">{{ role.name }}</div>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2">Active</div>
+    <div class="col-md-10"><input type="checkbox" disabled="true" {% if user.active == True %}checked{% endif %}/></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12">
+      {% if current_user.username != user.username %}
+        <a href="/toggle_user_active/{{ user.id }}" class="btn btn-default">{% if user.active == True %}Make Inactive{% else %}Make Active{% endif %}</a>
+      {% endif %}
+      <a href="/manage_roles/{{ user.id }}" class="btn btn-default">Manage Roles</a>
+      <a href="" class="btn btn-default">Change Password</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

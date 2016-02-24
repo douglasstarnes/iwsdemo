@@ -1,11 +1,12 @@
 from app import app, db, api
 from flask import render_template, request, flash, redirect, url_for
-from app.models import Client, ProductArea, Ticket, TicketUser
+from app.models import Client, ProductArea, Ticket, TicketUser, TicketRole
 import datetime, time, re
 from flask_restful import Resource
-from flask.ext.security import login_required, roles_required
+from flask.ext.security import login_required, roles_required, current_user
 import string
 import random
+from app.security import user_datastore
 
 def parse_date(date_string):
     pattern = '\w{3}\s\w{3}\s\d{2}\s\d{4}'
@@ -81,15 +82,73 @@ def create_user():
         if not password == confirm:
             flash('Passwords did not match each other, please try again')
             return redirect(url_for('create_user'))
-        ticket_user = TickerUser.query.filter_by(email=email).first()
-        if ticket_user is None:
-            ticket_user = TicketUser(
-
-            )
-        else:
+        try:
+            user_datastore.create_user(email=email, password=password, username=username)
+            db.session.commit()
+            if generate_password:
+                flash('User created with password: {}'.format(password))
+            else:
+                flash('User created')
+            return redirect(url_for('list_users'))
+        except IntegrityError:
             flash('Email is already in use')
             return redirect(url_for('create_user'))
 
+@app.route('/list_users')
+@roles_required('admin')
+@login_required
+def list_users():
+    users = TicketUser.query.all()
+    return render_template('list_users.html', users=users)
+
+@app.route('/user_details/<int:user_id>')
+@roles_required('admin')
+@login_required
+def user_details(user_id):
+    user = TicketUser.query.get(user_id)
+    if user is None:
+        flash('User could not be found')
+        return redirect(url_for('list_users'))
+    else:
+        return render_template('user_details.html', user=user)
+
+@app.route('/toggle_user_active/<int:user_id>')
+@roles_required('admin')
+@login_required
+def toggle_user_active(user_id):
+    if not current_user.id == user_id: #don't want users to deactivate their own accounts
+        user = TicketUser.query.get(user_id)
+        if user is not None:
+            user.active = not user.active
+            db.session.add(user)
+            db.session.commit()
+    return redirect(url_for('user_details', user_id=user_id))
+
+@app.route('/manage_roles/<int:user_id>', methods=['GET', 'POST'])
+@roles_required('admin')
+@login_required
+def manage_roles(user_id):
+    user = TicketUser.query.get(user_id)
+    if user is not None:
+        all_roles = [role.name for role in TicketRole.query.all()]
+        if request.method == 'GET':
+            active_roles = [role for role in all_roles if user.has_role(role)]
+            inactive_roles = list(set(all_roles).difference(set(active_roles)))
+            return render_template('manage_roles.html', active_roles=active_roles, inactive_roles=inactive_roles, user=user)
+        else:
+            for role in all_roles:
+                print('checking role: {}'.format(role))
+                if request.form.get('role_' + role):
+                    if not user.has_role(role):
+                        print('adding role')
+                        user_datastore.add_role_to_user(user, role)
+                else:
+                    if user.has_role(role):
+                        print('removing role')
+                        user_datastore.remove_role_from_user(user, role)
+            db.session.commit()
+            return redirect(url_for('user_details', user_id=user_id))
+    return redirect(url_for('list_users'))
 
 @app.route('/tickets')
 def tickets():
