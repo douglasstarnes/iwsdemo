@@ -25,7 +25,7 @@
       {{ ticket.target }}
     </div>
     <div class="col-md-3">
-      {{ ticket.get_status_message() }}
+      {{ ticket.get_status_meta()['message'] }}
     </div>
     <div class="col-md-3">
       <a href="/my_tickets/{{ ticket.id}}">Details</a>

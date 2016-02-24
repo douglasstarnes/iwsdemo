@@ -65,5 +65,5 @@ class Ticket(db.Model):
         db.session.add(self)
         db.session.commit()
 
-    def get_status_message(self):
+    def get_status_meta(self):
         return constants.STATUS_MESSAGES[self.ticket_status]

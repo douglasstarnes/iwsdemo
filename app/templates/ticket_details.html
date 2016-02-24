@@ -3,5 +3,42 @@
 {% block content %}
 <div class="container">
   <h1>{{ ticket.title }}</h1>
+  <div class="row">
+    <div class="col-md-2"><b>Status</b></div>
+    <div class="col-md-10">
+      {{ ticket.get_status_meta()['message']}}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"><b>Client</b></div>
+    <div class="col-md-10">
+      {{ ticket.client.name }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"><b>Product Area</b></div>
+    <div class="col-md-10">
+      {{ ticket.product_area.name }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-2"><b>Due date</b></div>
+    <div class="col-md-10">
+      {{ ticket.target.strftime('%b. %d, %Y') }}
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-12"><b>Description</b></div>
+  </div>
+  <div class="row">
+    <div class="col-md-12 well">{{ ticket.description }}</div>
+  </div>
+  <div class="row">
+    {% if ticket.ticket_status >= 0 %}
+    <div class="col-md-12">
+      <a class="btn btn-default" href="/ticket_next/{{ ticket.id }}">{{ ticket.get_status_meta()['button_title']}}</a>
+    </div>
+    {% endif %}
+  </div>
 </div>
 {% endblock %}

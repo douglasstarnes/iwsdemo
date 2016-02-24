@@ -21,5 +21,12 @@
     </div>
     <input type="hidden" name="next"/>
   </form>
+  {% with messages = get_flashed_messages() %}
+    {% for message in messages %}
+      <div class="row">
+        <div class="alert alert-info">{{ message }}</div>
+      </div>
+    {% endfor %}
+  {% endwith %}
 </div>
 {% endblock %}

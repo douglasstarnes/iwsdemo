@@ -162,6 +162,21 @@ def manage_roles(user_id):
             return redirect(url_for('user_details', user_id=user_id))
     return redirect(url_for('list_users'))
 
+@app.route('/ticket_next/<int:ticket_id>')
+@login_required
+def ticket_next(ticket_id):
+    ticket = Ticket.query.get(ticket_id)
+    if ticket is not None and ticket.assigned_to == current_user:
+        if ticket.ticket_status >= 0:
+            next_status = ticket.get_status_meta()['next_status']
+            ticket.ticket_status = next_status
+            db.session.add(ticket)
+            db.session.commit()
+        return redirect(url_for('my_tickets', ticket_id=ticket_id))
+    else:
+        flash('You can only access tickets assigned to you')
+        return redirect(url_for('my_tickets'))
+
 @app.route('/tickets')
 @roles_required('admin')
 @login_required
