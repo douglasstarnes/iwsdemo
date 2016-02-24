@@ -82,6 +82,9 @@ class Ticket(db.Model):
         db.session.add(ticket_log)
         db.session.commit()
 
+    def is_overdue(self):
+        return datetime.datetime.now().date() > self.target.date()
+
 class TicketLog(db.Model):
     __tablename___ = 'ticket_log'
     id = db.Column(db.Integer, primary_key=True)

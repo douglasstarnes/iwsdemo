@@ -15,7 +15,7 @@
     <div class="col-md-3">
       {% raw %}<a href="/tickets/{{ ticket.id }}">{{ ticket.title }}</a>{% endraw %}
     </div>
-    <div class="col-md-3">
+    <div class="col-md-3" ng-class="isOverdue(ticket)">
       {% raw %}{{ ticket.target }}{% endraw %}
     </div>
     <div class="col-md-3">

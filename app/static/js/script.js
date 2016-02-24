@@ -11,6 +11,13 @@ angular.module('ticketApp', ['ngAnimate', 'ui.bootstrap'])
             $scope.tickets = sorted;
           })
       };
+      $scope.isOverdue = function(ticket) {
+        if (ticket.overdue) {
+          return 'overdue';
+        } else {
+          return '';
+        }
+      }
     })
     .controller('CreateUserController', function($scope) {
 

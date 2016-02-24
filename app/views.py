@@ -251,10 +251,10 @@ def add_comment():
     else:
         return redirect(url_for('my_tickets'))
 
-@app.route('/home')
-@login_required
-def home():
-    return render_template('home.html')
+@app.route('/forbidden')
+def forbidden():
+    return render_template('forbidden.html')
+
 
 @app.route('/dashboard')
 @roles_required('admin')
@@ -278,7 +278,8 @@ class TicketsApi(Resource):
                 'ticket_url': ticket.ticket_url,
                 'product_area': ticket.product_area.name,
                 'priority': ticket.priority,
-                'assigned_to': ticket.assigned_to.username
+                'assigned_to': ticket.assigned_to.username,
+                'overdue': ticket.is_overdue()
             }
             for ticket in tickets
         ]
