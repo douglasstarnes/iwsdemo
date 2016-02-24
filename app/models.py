@@ -1,6 +1,7 @@
 from app import db
-from flask.ext.security import UserMixin, RoleMixin
+from flask.ext.security import UserMixin, RoleMixin, current_user
 from app import constants
+import datetime
 
 roles_users = db.Table('roles_users',
     db.Column('ticket_user_id', db.Integer(), db.ForeignKey('ticket_user.id')),
@@ -67,3 +68,27 @@ class Ticket(db.Model):
 
     def get_status_meta(self):
         return constants.STATUS_MESSAGES[self.ticket_status]
+
+    def add_log(self, message_type=constants.TICKET_LOG_TYPE_COMMENT, message_content=None):
+        if message_type == constants.TICKET_LOG_TYPE_STATUS_CHANGE:
+            message_content = self.get_status_meta()['log_message']
+        ticket_log = TicketLog(
+            message = message_content,
+            message_type = message_type,
+            created = datetime.datetime.now(),
+            author = current_user,
+            ticket = self
+        )
+        db.session.add(ticket_log)
+        db.session.commit()
+
+class TicketLog(db.Model):
+    __tablename___ = 'ticket_log'
+    id = db.Column(db.Integer, primary_key=True)
+    message = db.Column(db.Text())
+    message_type = db.Column(db.Integer(), default=constants.TICKET_LOG_TYPE_COMMENT)
+    created = db.Column(db.DateTime())
+    author_id = db.Column(db.Integer, db.ForeignKey('ticket_user.id'))
+    author = db.relationship(TicketUser, backref=db.backref('logs'))
+    ticket_id = db.Column(db.Integer, db.ForeignKey('ticket.id'))
+    ticket = db.relationship(Ticket, backref=db.backref('logs'))

@@ -28,9 +28,6 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-12"><b>Description</b></div>
-  </div>
-  <div class="row">
     <div class="col-md-12 well">{{ ticket.description }}</div>
   </div>
   <div class="row">
@@ -40,5 +37,24 @@
     </div>
     {% endif %}
   </div>
+  <div class="row">
+    <form action="/add_comment" method="POST">
+      <input type="hidden" value="{{ ticket.id }}" name="ticket_id"/>
+      <div class="col-md-2">
+        <input class="btn btn-default" type="submit" value="Add Comment">
+      </div>
+      <div class="col-md-10">
+        <textarea class="form-control" name="log_message"></textarea>
+      </div>
+    </form>
+  </div>
+  {% for log in ticket.logs %}
+  <div class="row">
+    <div class="alert {% if log.message_type == constants.TICKET_LOG_TYPE_STATUS_CHANGE %} alert-info {% else %} alert-success {% endif %}">
+      <b>{{ log.message }}</b><br/>
+      <i>{{ log.author.username }}</i>&nbsp;<small>{{ log.created.strftime('%b. %d, %Y %H:%M') }}</small>
+    </div>
+  </div>
+  {% endfor %}
 </div>
 {% endblock %}

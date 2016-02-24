@@ -1,4 +1,4 @@
-from app import app, db, api
+from app import app, db, api, constants
 from flask import render_template, request, flash, redirect, url_for
 from app.models import Client, ProductArea, Ticket, TicketUser, TicketRole
 import datetime, time, re
@@ -58,6 +58,8 @@ def new_ticket():
         db.session.add(ticket)
         db.session.commit()
 
+        ticket.add_log(constants.TICKET_LOG_TYPE_STATUS_CHANGE)
+
         return redirect(url_for('tickets'))
 
 @app.route('/my_tickets/<int:ticket_id>')
@@ -69,7 +71,7 @@ def my_tickets(ticket_id=None):
     else:
         ticket = Ticket.query.get(ticket_id)
         if ticket is not None and ticket.assigned_to == current_user:
-            return render_template('ticket_details.html', ticket=ticket)
+            return render_template('ticket_details.html', ticket=ticket, constants=constants)
         else:
             flash('You can only access tickets that have been assigned to you')
             return redirect(url_for('my_tickets'))
@@ -172,6 +174,7 @@ def ticket_next(ticket_id):
             ticket.ticket_status = next_status
             db.session.add(ticket)
             db.session.commit()
+            ticket.add_log(constants.TICKET_LOG_TYPE_STATUS_CHANGE)
         return redirect(url_for('my_tickets', ticket_id=ticket_id))
     else:
         flash('You can only access tickets assigned to you')
@@ -183,6 +186,16 @@ def ticket_next(ticket_id):
 def tickets():
     clients = Client.query.all()
     return render_template('tickets.html', clients=clients)
+
+@app.route('/add_comment', methods=['POST'])
+@login_required
+def add_comment():
+    ticket = Ticket.query.get(int(request.form['ticket_id']))
+    if ticket is not None and (ticket.assigned_to == current_user or current_user.is_admin() == True):
+        ticket.add_log(message_content=request.form['log_message'])
+        return redirect(url_for('my_tickets', ticket_id=ticket.id))
+    else:
+        return redirect(url_for('my_tickets'))
 
 @app.route('/home')
 @login_required
