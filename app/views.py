@@ -1,6 +1,6 @@
 from app import app, db, api, constants
 from flask import render_template, request, flash, redirect, url_for
-from app.models import Client, ProductArea, Ticket, TicketUser, TicketRole
+from app.models import Client, ProductArea, Ticket, TicketUser, TicketRole, TicketLog
 import datetime, time, re
 from flask_restful import Resource
 from flask.ext.security import login_required, roles_required, current_user
@@ -262,6 +262,24 @@ def add_comment():
 @app.route('/forbidden')
 def forbidden():
     return render_template('forbidden.html')
+
+@app.route('/delete_ticket/<int:ticket_id>')
+@roles_required('admin')
+@login_required
+def delete_ticket(ticket_id):
+    ticket = Ticket.query.get(ticket_id)
+    # delete ticket logs
+    logs = TicketLog.query.filter_by(ticket_id=ticket_id)
+    # increase priority of all tickets lower
+    tickets = Ticket.query.filter_by(client_id = ticket.client_id).filter(Ticket.priority > ticket.priority).all()
+    for item in tickets:
+        item.increase_priority()
+    # delete ticket and logs
+    logs.delete()
+    db.session.delete(ticket)
+    db.session.commit()
+
+    return redirect(url_for('tickets'))
 
 
 @app.route('/dashboard')
