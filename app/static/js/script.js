@@ -13,5 +13,5 @@ angular.module('ticketApp', ['ngAnimate', 'ui.bootstrap'])
       };
     })
     .controller('CreateUserController', function($scope) {
-      
+
     });

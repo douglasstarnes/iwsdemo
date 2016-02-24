@@ -34,6 +34,9 @@
     {% if ticket.ticket_status >= 0 %}
     <div class="col-md-12">
       <a class="btn btn-default" href="/ticket_next/{{ ticket.id }}">{{ ticket.get_status_meta()['button_title']}}</a>
+      {% if current_user.is_admin() %}
+        <a class="btn btn-default" href="/edit_ticket/{{ ticket.id }}">Edit Ticket</a>
+      {% endif %}
     </div>
     {% endif %}
   </div>

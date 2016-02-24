@@ -180,12 +180,66 @@ def ticket_next(ticket_id):
         flash('You can only access tickets assigned to you')
         return redirect(url_for('my_tickets'))
 
+@app.route('/tickets/<int:ticket_id>')
 @app.route('/tickets')
 @roles_required('admin')
 @login_required
-def tickets():
-    clients = Client.query.all()
-    return render_template('tickets.html', clients=clients)
+def tickets(ticket_id=None):
+    if ticket_id is None:
+        clients = Client.query.all()
+        return render_template('tickets.html', clients=clients)
+    else:
+        ticket = Ticket.query.get(ticket_id)
+        if ticket is not None:
+            return render_template('ticket_details.html', ticket=ticket, constants=constants)
+        else:
+            flash('Ticket could not be found')
+            return redirect(url_for('tickets'))
+
+@app.route('/edit_ticket/<int:ticket_id>', methods=['GET', 'POST'])
+@roles_required('admin')
+@login_required
+def edit_ticket(ticket_id):
+    if request.method == 'GET':
+        ticket = Ticket.query.get(ticket_id)
+        if ticket is not None:
+            clients = Client.query.all()
+            products = ProductArea.query.all()
+            users = TicketUser.query.all()
+            return render_template('edit_ticket.html', ticket=ticket, clients=clients, products=products, users=users)
+        else:
+            flash('Ticket could not be found')
+            return redirect(url_for('tickets'))
+    else:
+        title = request.form['title']
+        description = request.form['description']
+        target_date = request.form['target_date']
+        client_id = request.form['client']
+        product_area_id = request.form['product_area']
+        ticket_url = request.form['ticket_url']
+        user_id = request.form['assigned_to']
+
+        client = Client.query.get(int(client_id))
+        product_area = ProductArea.query.get(int(product_area_id))
+        user = TicketUser.query.get(int(user_id))
+
+        ticket = Ticket.query.get(ticket_id)
+        if ticket is not None:
+            ticket.title = title
+            ticket.description = description
+            ticket.target=parse_date(target_date)
+            ticket.client = client
+            ticket.product_area = product_area
+            ticket.assigned_to = user
+            ticket.ticket_url = ticket_url
+
+            db.session.add(ticket)
+            db.session.commit()
+
+            ticket.add_log(message_content='Edited ticket')
+
+            return redirect(url_for('tickets', ticket_id=ticket_id))
+
 
 @app.route('/add_comment', methods=['POST'])
 @login_required

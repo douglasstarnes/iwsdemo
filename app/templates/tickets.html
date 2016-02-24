@@ -13,7 +13,7 @@
   </div>
   <div class="row" ng-repeat="ticket in tickets">
     <div class="col-md-3">
-      {% raw %}{{ ticket.title }}{% endraw %}
+      {% raw %}<a href="/tickets/{{ ticket.id }}">{{ ticket.title }}</a>{% endraw %}
     </div>
     <div class="col-md-3">
       {% raw %}{{ ticket.target }}{% endraw %}

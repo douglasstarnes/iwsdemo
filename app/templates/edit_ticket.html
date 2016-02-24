@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+  <div ng-controller="EditTicketController">
+      <form action="/edit_ticket/{{ ticket.id }}" method="post">
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input class="form-control" type="text" name="title" value="{{ ticket.title }}"/>
+          </div>
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea rows="5" cols="60" name="description" class="form-control">{{ ticket.description }}</textarea>
+          </div>
+          <div class="form-group">
+            <label for="">Target Date</label>
+            <uib-datepicker min-date="minDate" ng-model="dt" init-date="initDate"></uib-datepicker><br/>
+            <input type="hidden" name="target_date" ng-value="dt"/>
+          </div>
+          <div class="form-group">
+            <label for="ticket_url">Ticket URL</label>
+            <input type="text" name="ticket_url" class="form-control" value="{{ ticket.ticket_url }}"/>
+          </div>
+          <div class="form-group">
+            <label for="client">Client</label>
+            <select name="client" class="form-control">
+                {% for client in clients %}
+                    <option value="{{ client.id }}" {% if client.id == ticket.client_id %}selected{% endif %}>{{ client.name }}</option>
+                {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="product_area">Product Area</label>
+            <select name="product_area" class="form-control">
+            {% for product in products %}
+                <option value="{{ product.id }}" {% if product.id == ticket.product_id %}selected{% endif %}>{{ product.name }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="assigned_to">Assigned To</label>
+            <select name="assigned_to" class="form-control">
+            {% for user in users %}
+                <option value="{{ user.id }}" {% if user.id == ticket.assigned_to_id %}selected{% endif %}>{{ user.username }}</option>
+            {% endfor %}
+            </select>
+          </div>
+          <div class="form-group">
+            <input type="submit" value="Submit" class="form-control"/>
+          </div>
+      </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+var app = angular.module('ticketApp');
+app.controller('EditTicketController', function($scope) {
+  $scope.minDate = new Date();
+  $scope.initDate = new Date('{{ ticket.target.strftime('%m-%d-%Y')}}');
+  $scope.dt = $scope.initDate;
+  console.log($scope.dt);
+});
+</script>
+{% endblock %}
