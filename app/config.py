@@ -1,3 +1,5 @@
+import os
+
 class BaseConfig(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = True # suppress warning
     SECURITY_POST_LOGIN_VIEW = 'index'
@@ -7,10 +9,10 @@ class BaseConfig(object):
 
 class DevelopmentConfig(BaseConfig):
     SECRET_KEY = 'development'
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///data.db'
+    SQLALCHEMY_DATABASE_URI = os.getenv('DEVDB')
     DEBUG = True
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
     SECRET_KEY = 'nHCv7L1pVqAU%5nf64(qDsuTAFLl@me4DPu*lN%3ZDdok22FP6ok#Y7Tb^o8ctxp'
-    SQLALCHEMY_DATABASE_URI = 'something postgres'
+    SQLALCHEMY_DATABASE_URI = os.getenv('PRODDB')

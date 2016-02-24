@@ -1,4 +1,4 @@
-from app import app, db, script_manager
+from app import app, db, script_manager, constants
 from flask.ext.script import Command, Option
 from app.models import Client, TicketUser, ProductArea, Ticket
 import getpass
@@ -39,7 +39,7 @@ class PopulateDatabaseCommand(Command):
             ticket = Ticket(
                 title='Sample Ticket {}'.format(i+1),
                 description='Sample Description {}'.format(i+1),
-                priority=(i % 3) + 1,
+                priority=[1,1,1,2,2,2,3,3,3,4,4,4][i],
                 target = (datetime.datetime.now() + datetime.timedelta(days=random.randint(-2, 4))).date(),
                 ticket_url = 'http://ticket{}.example.com'.format(i+1),
                 client_id=(i%3) + 1,

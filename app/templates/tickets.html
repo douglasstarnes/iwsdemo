@@ -6,6 +6,7 @@
     <label for="clients">Select a client</label>
     <select class="form-control" name="clients" ng-model="client_id" ng-change="get_tickets()">
       <option value="">-- Select a client --</option>
+      <option value="0">All Clients</option>
       {% for client in clients %}
         <option value="{{ client.id }}">{{ client.name }}</option>
       {% endfor %}

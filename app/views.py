@@ -67,7 +67,15 @@ def new_ticket():
 @login_required
 def my_tickets(ticket_id=None):
     if ticket_id == None:
-        return render_template('my_tickets.html', tickets=current_user.tickets)
+        tickets = current_user.tickets
+        grouped_tickets = {}
+        for ticket in tickets:
+            if not ticket.client.name in grouped_tickets.keys():
+                grouped_tickets[ticket.client.name] = []
+            grouped_tickets[ticket.client.name].append(ticket)
+        for k in grouped_tickets.keys():
+            grouped_tickets[k] = sorted(grouped_tickets[k], key=lambda x: x.priority)
+        return render_template('my_tickets.html', grouped_tickets=grouped_tickets, client_names=[client.name for client in Client.query.order_by(Client.name).all()])
     else:
         ticket = Ticket.query.get(ticket_id)
         if ticket is not None and ticket.assigned_to == current_user:
@@ -267,7 +275,10 @@ def index():
 
 class TicketsApi(Resource):
     def get(self, client_id):
-        tickets = Ticket.query.filter_by(client_id=client_id)
+        if int(client_id) > 0:
+            tickets = Ticket.query.filter_by(client_id=client_id)
+        else:
+            tickets = Ticket.query.all()
         return [
             {
                 'id': ticket.id,

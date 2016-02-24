@@ -1,7 +1,7 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask.ext.script import Manager
-from app.config import DevelopmentConfig
+from app.config import DevelopmentConfig, ProductionConfig
 import os
 from flask_restful import Api
 from flask.ext.security import Security

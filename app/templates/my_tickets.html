@@ -16,21 +16,28 @@
     <div class="col-md-3">
     </div>
   </div>
-  {% for ticket in tickets %}
-  <div class="row">
-    <div class="col-md-3">
-      {{ ticket.title }}
+  {% for client_name in client_names %}
+    <div class="row">
+      <div class="col-md-12">
+        <h4>{{client_name}}
+      </div>
     </div>
-    <div class="col-md-3 {% if ticket.is_overdue() %}overdue{% endif %}">
-      {{ ticket.target }}
+    {% for ticket in grouped_tickets[client_name] %}
+    <div class="row">
+      <div class="col-md-3">
+        {{ ticket.title }}
+      </div>
+      <div class="col-md-3 {% if ticket.is_overdue() %}overdue{% endif %}">
+        {{ ticket.target }}
+      </div>
+      <div class="col-md-3">
+        {{ ticket.get_status_meta()['message'] }}
+      </div>
+      <div class="col-md-3">
+        <a href="/my_tickets/{{ ticket.id}}">Details</a>
+      </div>
     </div>
-    <div class="col-md-3">
-      {{ ticket.get_status_meta()['message'] }}
-    </div>
-    <div class="col-md-3">
-      <a href="/my_tickets/{{ ticket.id}}">Details</a>
-    </div>
-  </div>
+    {% endfor %}
   {% endfor %}
 </div>
 {% endblock %}
