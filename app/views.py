@@ -60,11 +60,19 @@ def new_ticket():
 
         return redirect(url_for('tickets'))
 
+@app.route('/my_tickets/<int:ticket_id>')
 @app.route('/my_tickets')
 @login_required
-def my_tickets():
-    tickets = Ticket.query.filter_by(assigned_to=current_user)
-    return render_template('my_tickets.html', tickets=tickets)
+def my_tickets(ticket_id=None):
+    if ticket_id == None:
+        return render_template('my_tickets.html', tickets=current_user.tickets)
+    else:
+        ticket = Ticket.query.get(ticket_id)
+        if ticket is not None and ticket.assigned_to == current_user:
+            return render_template('ticket_details.html', ticket=ticket)
+        else:
+            flash('You can only access tickets that have been assigned to you')
+            return redirect(url_for('my_tickets'))
 
 @app.route('/create_user', methods=['GET', 'POST'])
 @roles_required('admin')
@@ -155,6 +163,8 @@ def manage_roles(user_id):
     return redirect(url_for('list_users'))
 
 @app.route('/tickets')
+@roles_required('admin')
+@login_required
 def tickets():
     clients = Client.query.all()
     return render_template('tickets.html', clients=clients)
@@ -171,7 +181,7 @@ def dashboard():
 
 @app.route('/')
 def index():
-    return 'hello flask'
+    return render_template('index.html')
 
 class TicketsApi(Resource):
     def get(self, client_id):

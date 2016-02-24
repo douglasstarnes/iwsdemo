@@ -2,6 +2,20 @@
 
 {% block content %}
 <div class="container">
+  <h1>Tickets assigned to {{ current_user.username }}</h1>
+  <div class="row">
+    <div class="col-md-3">
+      <b>Title</b>
+    </div>
+    <div class="col-md-3">
+      <b>Due date</b>
+    </div>
+    <div class="col-md-3">
+      <b>Status</b>
+    </div>
+    <div class="col-md-3">
+    </div>
+  </div>
   {% for ticket in tickets %}
   <div class="row">
     <div class="col-md-3">
@@ -11,10 +25,10 @@
       {{ ticket.target }}
     </div>
     <div class="col-md-3">
-      {{ ticket.product_area.name }}
+      {{ ticket.get_status_message() }}
     </div>
     <div class="col-md-3">
-      {{ ticket.description }}
+      <a href="/my_tickets/{{ ticket.id}}">Details</a>
     </div>
   </div>
   {% endfor %}

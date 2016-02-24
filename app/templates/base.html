@@ -3,8 +3,40 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.6/css/bootstrap.min.css">
     </head>
     <body>
+      <div class="container">
+        <nav class="navbar navbar-default">
+          <ul class="nav navbar-nav">
+            <li>
+              <a href="/">Home</a>
+            </li>
+            {% if current_user.is_authenticated %}
+              <li>
+                <p class="navbar-text">Welcome {{ current_user.username }}</p>
+              </li>
+            {% else %}
+              <li>
+                <a href="/login">Login</a>
+              </li>
+            {% endif %}
+
+            {% if current_user.is_authenticated %}
+              <li>
+                <a href="/my_tickets">View My Tickets</a>
+              </li>
+              {% if current_user.is_admin() %}
+                <li>
+                  <a href="/dashboard">Admin Dashboard</a>
+                </li>
+              {% endif %}
+              <li>
+                <a href="/logout">Logout</a>
+              </li>
+            {% endif %}
+          </ul>
+        </nav>
         {% block content %}
         {% endblock %}
+      </div>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.5.1/lodash.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.9/angular.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.9/angular-animate.min.js"></script>

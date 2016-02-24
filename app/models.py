@@ -64,3 +64,6 @@ class Ticket(db.Model):
         self.priority -= 1
         db.session.add(self)
         db.session.commit()
+
+    def get_status_message(self):
+        return constants.STATUS_MESSAGES[self.ticket_status]
