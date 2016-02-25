@@ -30,9 +30,9 @@ The application can also be run on the Cloud9 IDE for free which is an easy way 
  2. Create a new public, custom workspace.  For demo purposes I'll call mine, `iwsdemo`.
  3. Clone the repo using HTTPS: `git clone https://github.com/douglasstarnes/iwsdemo.git`
  4. In the terminal, create a new environment variable for the database URI in the development config: `export DEVDB=sqlite:///data.db`
- 5. Create a new Python 3 virtual environment: `mkvirtualenv --python=``which python3`` iwsdemo`
+ 5. Create a new Python 3 virtual environment: ``mkvirtualenv `--python=which python3` iwsdemo``
  6. Change to the `iwsdemo` repo directory: `cd iwsdemo`
  7. Run the script to create the database: `python manage.py reset_database` (answer 'y' to the prompt)
  8. Run the script to create the sample data: `python manage.py populate_database`
  9. Start the development server: `python manage.py runserver -p 8080 -h 0.0.0.0` (Cloud 9 will map internal port 8080 to 80 on the public URL in the next step)
- 10. The application is now accessible at  `http://{workspacename}-{username}.c9users.io`.  The workspace and user names can be found in the URL for the workspace.  For mine the URL is: `https://ide.c9.io/douglasstarnes/iwsdemo` My user name is `douglasstarnes` and my workspace name is `iwsdemo` so the public URL is `http://iwsdemo-douglasstarnes.c9users.io`. 
+ 10. The application is now accessible at  `http://{workspacename}-{username}.c9users.io`.  The workspace and user names can be found in the URL for the workspace.  For mine the URL is: `https://ide.c9.io/douglasstarnes/iwsdemo` My user name is `douglasstarnes` and my workspace name is `iwsdemo` so the public URL is `http://iwsdemo-douglasstarnes.c9users.io`.
