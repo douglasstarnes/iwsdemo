@@ -30,7 +30,7 @@ The application can also be run on the Cloud9 IDE for free which is an easy way 
  2. Create a new public, custom workspace.  For demo purposes I'll call mine, `iwsdemo`.
  3. Clone the repo using HTTPS: `git clone https://github.com/douglasstarnes/iwsdemo.git`
  4. In the terminal, create a new environment variable for the database URI in the development config: `export DEVDB=sqlite:///data.db`
- 5. Create a new Python 3 virtual environment: ``mkvirtualenv `--python=which python3` iwsdemo``
+ 5. Create a new Python 3 virtual environment: ``mkvirtualenv --python=`which python3` iwsdemo``
  6. Change to the `iwsdemo` repo directory: `cd iwsdemo`
  7. Run the script to create the database: `python manage.py reset_database` (answer 'y' to the prompt)
  8. Run the script to create the sample data: `python manage.py populate_database`
