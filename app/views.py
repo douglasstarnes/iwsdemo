@@ -222,12 +222,10 @@ def edit_ticket(ticket_id):
         title = request.form['title']
         description = request.form['description']
         target_date = request.form['target_date']
-        client_id = request.form['client']
         product_area_id = request.form['product_area']
         ticket_url = request.form['ticket_url']
         user_id = request.form['assigned_to']
 
-        client = Client.query.get(int(client_id))
         product_area = ProductArea.query.get(int(product_area_id))
         user = TicketUser.query.get(int(user_id))
 
@@ -236,7 +234,6 @@ def edit_ticket(ticket_id):
             ticket.title = title
             ticket.description = description
             ticket.target=parse_date(target_date)
-            ticket.client = client
             ticket.product_area = product_area
             ticket.assigned_to = user
             ticket.ticket_url = ticket_url
