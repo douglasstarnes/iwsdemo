@@ -12,19 +12,28 @@
       {% endfor %}
     </select>
   </div>
-  <div class="row" ng-repeat="ticket in tickets">
-    <div class="col-md-3">
-      {% raw %}<a href="/tickets/{{ ticket.id }}">{{ ticket.title }}</a>{% endraw %}
-    </div>
-    <div class="col-md-3" ng-class="isOverdue(ticket)">
-      {% raw %}{{ ticket.target }}{% endraw %}
-    </div>
-    <div class="col-md-3">
-      {% raw %}{{ ticket.product_area }}{% endraw %}
-    </div>
-    <div class="col-md-3">
-      {% raw %}{{ ticket.assigned_to }}{% endraw %}
-    </div>
-  </div>
-</div>
+  <table class="table">
+    <thead>
+      <th>Title (click for details)</th>
+      <th>Due date</th>
+      <th>Product area</th>
+      <th>Assigned to</th>
+    </thead>
+    <tbody>
+      <tr ng-repeat="ticket in tickets">
+        <td>
+          {% raw %}<a href="/tickets/{{ ticket.id }}">{{ ticket.title }}</a>{% endraw %}
+        </td>
+        <td ng-class="isOverdue(ticket)">
+          {% raw %}{{ ticket.target }}{% endraw %}
+        </td>
+        <td>
+          {% raw %}{{ ticket.product_area }}{% endraw %}
+        </td>
+        <td>
+          {% raw %}{{ ticket.assigned_to }}{% endraw %}
+        </td>
+      </tr>
+    </tbody>
+  </table>
 {% endblock %}

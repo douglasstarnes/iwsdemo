@@ -286,7 +286,10 @@ def dashboard():
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    num_tickets = 0
+    if current_user.is_authenticated == True:
+        num_tickets = len(Ticket.query.filter_by(assigned_to_id=current_user.id).all())
+    return render_template('index.html', num_tickets=num_tickets)
 
 class TicketsApi(Resource):
     def get(self, client_id):

@@ -3,41 +3,39 @@
 {% block content %}
 <div class="container">
   <h1>Tickets assigned to {{ current_user.username }}</h1>
-  <div class="row">
-    <div class="col-md-3">
-      <b>Title</b>
-    </div>
-    <div class="col-md-3">
-      <b>Due date</b>
-    </div>
-    <div class="col-md-3">
-      <b>Status</b>
-    </div>
-    <div class="col-md-3">
-    </div>
-  </div>
-  {% for client_name in client_names %}
-    <div class="row">
-      <div class="col-md-12">
-        <h4>{{client_name}}
-      </div>
-    </div>
-    {% for ticket in grouped_tickets[client_name] %}
-    <div class="row">
-      <div class="col-md-3">
-        {{ ticket.title }}
-      </div>
-      <div class="col-md-3 {% if ticket.is_overdue() %}overdue{% endif %}">
-        {{ ticket.target }}
-      </div>
-      <div class="col-md-3">
-        {{ ticket.get_status_meta()['message'] }}
-      </div>
-      <div class="col-md-3">
-        <a href="/my_tickets/{{ ticket.id}}">Details</a>
-      </div>
-    </div>
-    {% endfor %}
-  {% endfor %}
+  <table class="table">
+    <thead>
+      <th>Title</th>
+      <th>Due date</th>
+      <th>Status</th>
+    </thead
+    <tbody>
+      {% for client_name in client_names %}
+        {% if grouped_tickets[client_name]|length > 0 %}
+          <tr>
+            <td colspan="4">
+              <h4>{{client_name}}</h4>
+            </td>
+          </tr>
+          {% for ticket in grouped_tickets[client_name] %}
+          <tr>
+            <td>
+              {{ ticket.title }}
+            </td>
+            <td class="{% if ticket.is_overdue() %}overdue{% endif %}">
+              {{ ticket.target }}
+            </td>
+            <td>
+              {{ ticket.get_status_meta()['message'] }}
+            </td>
+            <td>
+              <a href="/my_tickets/{{ ticket.id}}">Details</a>
+            </td>
+          </tr>
+          {% endfor %}
+        {% endif %}
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
 {% endblock %}

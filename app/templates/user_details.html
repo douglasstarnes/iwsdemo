@@ -3,15 +3,15 @@
 {% block content %}
 <div class="container">
   <div class="row">
-    <div class="col-md-2">Username</div>
+    <div class="col-md-2"><b>Username</b></div>
     <div class="col-md-10">{{ user.username }}</div>
   </div>
   <div class="row">
-    <div class="col-md-2">Email</div>
+    <div class="col-md-2"><b>Email</b></div>
     <div class="col-md-10">{{ user.email }}</div>
   </div>
   <div class="row">
-    <div class="col-md-2">Roles</div>
+    <div class="col-md-2"><b>Roles</b></div>
     <div class="col-md-10">
       {% for role in user.roles %}
         <div class="row">
@@ -21,7 +21,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-md-2">Active</div>
+    <div class="col-md-2"><b>Active</b></div>
     <div class="col-md-10"><input type="checkbox" disabled="true" {% if user.active == True %}checked{% endif %}/></div>
   </div>
   <div class="row">

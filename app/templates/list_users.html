@@ -2,22 +2,32 @@
 
 {% block content %}
 <div class="container">
-  {% for user in users %}
-    <div class="row">
-      <div class="col-md-3">
-        {{ user.username }}
-      </div>
-      <div class="col-md-3">
-        {{ user.email }}
-      </div>
-      <div class="col-md-3">
-        {{ user.active }}
-      </div>
-      <div class="col-md-3">
-        <a href="/user_details/{{ user.id }}">Details</a>
-      </div>
-    </div>
-  {% endfor %}
+  <table class="table">
+    <thead>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Active?</th>
+      <th></th>
+    </thead>
+    <tbody>
+    {% for user in users %}
+      <tr>
+        <td>
+          {{ user.username }}
+        </td>
+        <td>
+          {{ user.email }}
+        </td>
+        <td>
+          {{ user.active }}
+        </td>
+        <td>
+          <a href="/user_details/{{ user.id }}">Details</a>
+        </td>
+      </tr>
+    {% endfor %}
+    </tbody>
+  <table>
   {% with messages = get_flashed_messages() %}
     {% for message in messages %}
       <div class="row">
