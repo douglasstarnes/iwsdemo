@@ -1,6 +1,17 @@
-A live version of this application can be found at http://ec2-54-85-150-230.compute-1.amazonaws.com.  From the URL, it is deployed to the Amazon Web Services EC2 cloud.  The database is an AWS RDS instance with MySQL.  The application itself is using Flask and Python 3.4.x.  A number of extensions are used such a Flask-Security, Flask-SQLAlchemy, Flask-RESTful and Flask-Script.  JavaScript with Angular JS, and Angular UI provide some interactivity.  The UI is styled with BootStrap.
+The application can be run on the Cloud9 IDE for free which is an easy way to view the code running in a development environment.
 
-The application is powered by the WSGI server gunicorn.  The public facing server is nginx.  It can be easily cloned into any Linux environment and use one of the databases supported by SQLAlchemy (the configuration here uses SQLite for development and MySQL for production).
+ 1. Go to http://c9.io and sign in with your Github account (or BitBucket)
+ 2. Create a new public, custom workspace.  For demo purposes I'll call mine, `iwsdemo`.
+ 3. Clone the repo using HTTPS: `git clone https://github.com/douglasstarnes/iwsdemo.git`
+ 4. In the terminal, create a new environment variable for the database URI in the development config: `export DEVDB=sqlite:///data.db`
+ 5. Create a new Python 3 virtual environment: ``mkvirtualenv --python=`which python3` iwsdemo``
+ 6. Change to the `iwsdemo` repo directory: `cd iwsdemo`
+ 7. Run the script to create the database: `python manage.py reset_database` (answer 'y' to the prompt)
+ 8. Run the script to create the sample data: `python manage.py populate_database`
+ 9. Start the development server: `python manage.py runserver -p 8080 -h 0.0.0.0` (Cloud 9 will map internal port 8080 to 80 on the public URL in the next step)
+ 10. The application is now accessible at  `http://{workspacename}-{username}.c9users.io`.  The workspace and user names can be found in the URL for the workspace.  For mine the URL is: `https://ide.c9.io/douglasstarnes/iwsdemo` My user name is `douglasstarnes` and my workspace name is `iwsdemo` so the public URL is `http://iwsdemo-douglasstarnes.c9users.io`.
+ 
+The application itself is using Flask and Python 3.4.x.  A number of extensions are used such a Flask-Security, Flask-SQLAlchemy, Flask-RESTful and Flask-Script.  JavaScript with Angular JS, and Angular UI provide some interactivity.  The UI is styled with BootStrap. It can be easily cloned into any Linux environment and use one of the databases supported by SQLAlchemy (the configuration here uses SQLite for development and MySQL for production).
 
 A walkthrough of the application follows:
 
@@ -24,15 +35,4 @@ There are 3 commands to work with the DB:
 
 There are also two configurations in `config.py` that handle which database is used (the connection strings are stored in environment variables for security and flexibility) and turn debugging off in production.
 
-The application can also be run on the Cloud9 IDE for free which is an easy way to view the code running in a development environment.
 
- 1. Go to http://c9.io and sign in with your Github account (or BitBucket)
- 2. Create a new public, custom workspace.  For demo purposes I'll call mine, `iwsdemo`.
- 3. Clone the repo using HTTPS: `git clone https://github.com/douglasstarnes/iwsdemo.git`
- 4. In the terminal, create a new environment variable for the database URI in the development config: `export DEVDB=sqlite:///data.db`
- 5. Create a new Python 3 virtual environment: ``mkvirtualenv --python=`which python3` iwsdemo``
- 6. Change to the `iwsdemo` repo directory: `cd iwsdemo`
- 7. Run the script to create the database: `python manage.py reset_database` (answer 'y' to the prompt)
- 8. Run the script to create the sample data: `python manage.py populate_database`
- 9. Start the development server: `python manage.py runserver -p 8080 -h 0.0.0.0` (Cloud 9 will map internal port 8080 to 80 on the public URL in the next step)
- 10. The application is now accessible at  `http://{workspacename}-{username}.c9users.io`.  The workspace and user names can be found in the URL for the workspace.  For mine the URL is: `https://ide.c9.io/douglasstarnes/iwsdemo` My user name is `douglasstarnes` and my workspace name is `iwsdemo` so the public URL is `http://iwsdemo-douglasstarnes.c9users.io`.
