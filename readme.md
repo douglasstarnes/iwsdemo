@@ -1,7 +1,7 @@
 The application can be run on the Cloud9 IDE for free which is an easy way to view the code running in a development environment.
 
  1. Go to http://c9.io and sign in with your Github account (or BitBucket)
- 2. Create a new public, blank workspace.  For demo purposes I'll call mine, `iwsdemo`.
+ 2. Create a new public, Python workspace.  For demo purposes I'll call mine, `iwsdemo`.
  3. Clone the repo using HTTPS: `git clone https://github.com/douglasstarnes/iwsdemo.git`
  4. In the terminal, create a new environment variable for the database URI in the development config: `export DEVDB=sqlite:///data.db`
  5. Create a new Python 3 virtual environment: ``mkvirtualenv --python=`which python3` iwsdemo``
