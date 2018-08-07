@@ -1,4 +1,5 @@
-The application can be run on the Cloud9 IDE for free which is an easy way to view the code running in a development environment.
+## *While the following instructions still apply, Cloud9 is no longer free.  But you can run the application locally assuming you have Pyhton 3.4x available and the permissions to install packages.*
+The application can be run on the Cloud9 IDE which is an easy way to view the code running in a development environment.
 
  1. Go to http://c9.io and sign in with your Github account (or BitBucket)
  2. Create a new public, Python workspace.  For demo purposes I'll call mine, `iwsdemo`.
